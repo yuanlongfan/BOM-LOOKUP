@@ -522,8 +522,13 @@ def prep_image(path):
         canvas.paste(im, ((canvas.width - bw) // 2, (canvas.height - bh) // 2))
         canvas.thumbnail((1000, 750))
         out = io.BytesIO()
-        canvas.save(out, "JPEG", quality=88, optimize=True)
-        return "image/jpeg", out.getvalue()
+        try:  # WebP nhẹ hơn JPEG ~60%, cùng độ nét -> trang tải nhanh hơn
+            canvas.save(out, "WEBP", quality=80, method=6)
+            return "image/webp", out.getvalue()
+        except Exception:  # noqa  (Pillow không hỗ trợ WebP)
+            out = io.BytesIO()
+            canvas.save(out, "JPEG", quality=88, optimize=True)
+            return "image/jpeg", out.getvalue()
     except Exception as e:  # noqa
         print("  (không xử lý được ảnh", path.name, ":", e, ")")
         return mimes.get(suffix, "image/png"), raw
