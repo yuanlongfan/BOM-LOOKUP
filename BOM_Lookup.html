@@ -504,6 +504,12 @@ dialog.lb button{position:absolute;right:10px;top:10px;background:var(--navy);co
   .bt-qty{font-size:16px}
 }
 @media print{.loading{display:none}}
+@media (max-width:600px){
+  .bar{position:sticky;top:0}
+  .bar.compact .brand,.bar.compact .tools{display:none}
+  .bar.compact .wrap{padding-top:8px;padding-bottom:8px}
+  .bar.compact .search{margin:0}
+}
 </style>
 </head>
 <body>
@@ -649,7 +655,7 @@ function trimPic(u){
 }
 function findPic(model){
   if(picCache[model]) return picCache[model];
-  picCache[model]=findPic0(model).then(trimPic);
+  picCache[model]=findPic0(model).then(function(u){ return (u&&u.indexOf('data:')===0)?u:trimPic(u) });
   return picCache[model];
 }
 function findPic0(model){
@@ -723,7 +729,8 @@ document.addEventListener('keydown',function(e){
 document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&bt&&bt.tab==='bom'){ var d=$('#btd'); if(d&&d.classList.contains('open')){ e.preventDefault(); btCloseDr() } } });
 /* ---------- routing ---------- */
 function go(hash){ if(location.hash.replace(/^#/,'')===hash){route()} else {location.hash=hash} }
-function open(id){ clearTimeout(timer); q.value=BYID[id].customerModel; clr.hidden=false; closeSug(); go('m='+encodeURIComponent(id)) }
+var COARSE=window.matchMedia&&matchMedia('(pointer:coarse)').matches;
+function open(id){ clearTimeout(timer); q.value=BYID[id].customerModel; clr.hidden=false; closeSug(); if(COARSE) q.blur(); go('m='+encodeURIComponent(id)) }
 var firstRoute=true;
 window.addEventListener('hashchange',route);
 function route(){ try{ route0() } finally{ firstRoute=false } }
@@ -739,6 +746,7 @@ function route0(){
   }
   var s=/^#s=(.*)$/.exec(location.hash);
   if(s){ var v=decodeURIComponent(s[1]); q.value=v; clr.hidden=!v; return showResults(v,search(v),true) }
+  if(document.activeElement!==q){ q.value=''; clr.hidden=true }
   showBrowse();
 }
 
@@ -1173,12 +1181,12 @@ function btHTML(it,n){
   '<aside class="bt-dr" id="btd" aria-label="Chi tiết linh kiện" aria-hidden="true"><header><div><div class="bt-code" id="btdc"></div><h3 id="btdt"></h3><div class="bt-zh" id="btdz"></div></div><button class="bt-dx" id="btdx" type="button" aria-label="Đóng">✕</button></header><div class="bt-body" id="btdb"></div></aside>'+
   '</div>';
 }
-function btUpdateHash(){
+function btUpdateHash(push){
   if(!bt) return;
   var h='m='+encodeURIComponent(bt.it.id)+'&t='+(bt.tab||'ov');
   if(bt.tab==='bom'){ if(bt.q) h+='&q='+encodeURIComponent(bt.q); if(bt.sel!=null) h+='&r='+bt.sel; }
   if(bt.tab==='ov') h='m='+encodeURIComponent(bt.it.id);
-  try{history.replaceState(null,'','#'+h)}catch(e){}
+  try{ if(push) history.pushState({bt:push},'','#'+h); else history.replaceState(history.state,'','#'+h) }catch(e){}
 }
 function btRender(){
   var D=bt.D, toks=btTokens(bt.q), q=bt.q;
@@ -1236,7 +1244,9 @@ function btRender(){
 }
 function btReveal(i){ var p=bt.D[i]?bt.D[i].par:null; while(p!=null){ bt.collapsed[p]=false; p=bt.D[p].par } }
 function btOpenDr(i,noScroll){
-  var D=bt.D, o=D[i]; if(!o) return; bt.sel=i; btReveal(i); btRender(); btUpdateHash();
+  var D=bt.D, o=D[i]; if(!o) return; var wasOpen=$('#btd').classList.contains('open');
+  bt.sel=i; btReveal(i); btRender(); btUpdateHash(!wasOpen&&!bt.routing?'dr':0);
+  if(COARSE&&!bt.routing){ var ae=document.activeElement; if(ae&&ae.id==='btq') ae.blur() }
   $('#btdc').textContent=o.code;
   $('#btdt').innerHTML=btCap(btViLine(o.sn,[]));
   $('#btdz').textContent=o.zh;
@@ -1259,15 +1269,16 @@ function btOpenDr(i,noScroll){
 }
 function btCloseDr(){
   var d=$('#btd'); if(!d) return; d.classList.remove('open'); d.setAttribute('aria-hidden','true'); $('#bts').classList.remove('on');
+  if(!bt.routing&&history.state&&history.state.bt==='dr'){ history.back(); return }
   var had=bt.sel; bt.sel=null; btRender(); btUpdateHash();
   var r=had!=null&&$('.bt-row[data-i="'+had+'"]'); if(r) r.focus({preventScroll:true});
 }
-function btSetTab(tab){
+function btSetTab(tab,push){
   bt.tab=tab;
   $('#tabOv').hidden=(tab!=='ov'); $('#tabBom').hidden=(tab!=='bom');
   $$('.bt-tab').forEach(function(b){b.setAttribute('aria-selected',String(b.dataset.t===tab))});
   if(tab==='bom'&&!bt.built){ btBuild() }
-  btUpdateHash();
+  btUpdateHash(push);
 }
 function btBuild(){
   bt.built=true; bt.D=btPrep(bt.it.id);
@@ -1332,10 +1343,15 @@ function btBuild(){
 function btInit(it,params){
   var n=((window.BOM_ROWS||{})[it.id]||[]).length;
   bt={it:it,tab:'ov',q:'',view:'tree',grp:-1,lvl:0,collapsed:{},sel:null,built:false,D:null};
-  $$('.bt-tab').forEach(function(b){ b.addEventListener('click',function(){ btSetTab(b.dataset.t) }) });
+  $$('.bt-tab').forEach(function(b){ b.addEventListener('click',function(){
+    var t=b.dataset.t; if(t===bt.tab) return;
+    if(t==='ov'&&history.state&&history.state.bt==='tab'){ history.back(); return }
+    btSetTab(t, t==='bom'?'tab':0);
+  }) });
   btApply(params);
 }
-function btApply(params){
+function btApply(params){ bt.routing=true; try{ btApply0(params) } finally{ bt.routing=false } }
+function btApply0(params){
   var t=params&&params.get('t')==='bom'?'bom':'ov';
   if(params&&params.get('q')!=null) bt.q=params.get('q'); 
   var r=params&&params.get('r'); bt.sel=(r!=null&&r!==''&&!isNaN(+r))?+r:null;
@@ -1361,6 +1377,9 @@ q.focus();
   function ph(){ var q=document.getElementById('q'); if(q) q.placeholder=mq.matches?'Tìm model: TMPH52, LT20-1, B-742…':'Tên quạt hoặc model khách hàng… (TMPH52, LT20-1, B-742)';
     var t=document.getElementById('btq'); if(t) t.placeholder=mq.matches?'Tìm linh kiện: vít, tem, dây…':'Tìm linh kiện: vít, tem, dây điện, 螺絲, mã liệu… (gõ có hoặc không dấu)' }
   ph(); if(mq.addEventListener) mq.addEventListener('change',ph);
+  var bar=document.querySelector('.bar');
+  window.addEventListener('scroll',function(){ var y=window.scrollY; if(!mq.matches){ bar.classList.remove('compact'); return }
+    if(y>200) bar.classList.add('compact'); else if(y<60) bar.classList.remove('compact') },{passive:true});
   new MutationObserver(function(){ var t=document.getElementById('btq'); if(t&&!t.dataset.ph){ t.dataset.ph=1; ph() } }).observe(document.getElementById('view'),{childList:true,subtree:true});
 })();
 </script>
