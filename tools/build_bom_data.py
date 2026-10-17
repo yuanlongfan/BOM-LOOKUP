@@ -247,7 +247,7 @@ def extract_motor(rows):
 # ----------------------------------------------------------------- tụ điện
 def parse_cap(spec):
     uf = None
-    m = re.search(r"(\d+(?:\.\d+)?(?:\+\d+(?:\.\d+)?)?)\s*uf", spec, re.I)
+    m = re.search(r"(\d+(?:\.\d+)?(?:\+\d+(?:\.\d+)?)?)\s*[uµμ]f", spec, re.I)
     if m:
         uf = m.group(1)
     else:
@@ -296,9 +296,9 @@ def extract_caps(rows):
     if caps:
         return caps
     # quạt remote: tụ nằm trong mô-đun đảo chiều (ưu tiên) hoặc trong bộ thu
-    for key, src in (("正反轉模組", "reverse_module"), ("接收器", "receiver")):
+    for key, src in (("正反轉模組|正反转模组|反轉模組|倒順模組", "reverse_module"), ("接收器", "receiver")):
         for r in rows:
-            if key in r["name"] and r["name"].startswith("零件") and re.search(r"\d(?:\.\d)?\s*uf", r["spec"], re.I):
+            if re.search(key, r["name"]) and r["name"].startswith("零件") and re.search(r"\d(?:\.\d)?\s*[uµμ]f", r["spec"], re.I):
                 c = {"raw": r["spec"], "rawVi": r["spec_vi"], "source": src}
                 c.update(parse_cap(r["spec"]))
                 caps.append(c)
