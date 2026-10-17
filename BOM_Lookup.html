@@ -1076,7 +1076,7 @@ function btSeg(str){
   var m=[]; out.forEach(function(s){var p=m[m.length-1]; if(p&&s.zh&&!s.v&&p.zh&&!p.v)p.t+=s.t; else m.push(s)});
   return m;
 }
-function btCap(s){return s.charAt(0).toUpperCase()+s.slice(1)}
+function btCap(s){return String(s).replace(/^((?:<[^>]*>|\s)*)(\S)/,function(m,t,c){return t+c.toUpperCase()})}
 function btRe(t){return new RegExp('(^|[\\s\\-–(),/])'+t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'))}
 function btTokens(q){return String(q).toLowerCase().split(/\s+/).filter(Boolean)}
 
@@ -1145,6 +1145,19 @@ function btSegHit(s,toks){
 var BT_HEAD={'標':1,'袋':1,'線':1,'線材':1,'盒':1,'蓋':1,'板':1,'罩':1,'管':1,'圈':1,'帶':1,'桿':1,'箱':1,'片':1,'墊':1,'墊片':1,'螺絲':1,'螺母':1,'華司':1,'彈簧':1,'插頭':1,'插座':1,'橡膠':1};
 /* tiếng Trung đặt danh từ chính ở cuối, tiếng Việt đặt ở đầu: đảo thứ tự cả cụm (chỉ để hiển thị, không đổi dữ liệu tìm) */
 function btOrder(ss){
+  /* “<model>機型燈具” -> “Bộ đèn của model <model>” */
+  var n=ss.length;
+  if(n>=3&&ss[n-2].t==='機型'&&ss[n-1].t==='燈具'&&!ss[n-3].zh&&ss[n-3].t.trim()){
+    ss=ss.slice(0,n-3).concat([{t:'機型燈具',zh:1,v:['bộ đèn của model']},{t:ss[n-3].t,zh:0}]);
+  }
+  else if(n>=4&&ss[n-1].t==='燈具'){
+    /* “<model>機型-<mã đèn>燈具” -> “Bộ đèn <mã đèn> của model <model>” */
+    var k=-1; for(var z=0;z<n-1;z++) if(ss[z].t==='機型'){k=z;break}
+    if(k>0&&!ss[k-1].zh&&ss[k-1].t.trim()){
+      var mid=ss.slice(k+1,n-1).map(function(x){ return x.zh?x:{t:x.t.replace(/^[-\s]+|[-\s]+$/g,''),zh:0} }).filter(function(x){return x.zh||x.t});
+      ss=ss.slice(0,k-1).concat([{t:'燈具',zh:1,v:['bộ đèn']}],mid,[{t:'的',zh:1,v:['của model']},{t:ss[k-1].t,zh:0}]);
+    }
+  }
   var out=[],i=0;
   while(i<ss.length){
     var j=i,run=[];
