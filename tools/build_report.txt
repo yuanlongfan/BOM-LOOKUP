@@ -1,0 +1,32 @@
+Số file BOM đọc được: 62/62  (overrides áp dụng: 0)
+Thiếu powerCord: 0  []
+Thiếu motorLabel: 0  []
+Thiếu motorType: 0  []
+Thiếu capacitors: 0  []
+Có bộ thu: 14, có bộ phát: 14
+Không có miếng đệm mô tơ: ['162095L', 'BEL52', 'F510L', 'F517L', 'F518L', 'F519L', 'F521L', 'F594L', 'FUL52', 'OS60']
+Không có tem dây đèn: ['F518L', 'F519L', 'F753', 'INS54', 'INS62', 'TMPH44', 'TMPH52', 'VE58']
+Tem dây đèn suy từ dây nguồn: []
+Dây nguồn số dây lạ (khác 2/3): []
+Tụ không tách được µF/V: []
+Ảnh nhúng: 60/62 model (1.0 MB); ảnh không khớp model nào: ['162057L.jpg', 'F535L.jpg', 'F581L.jpg', 'TOP52.webp']
+Chưa có ảnh (2): ['162119', 'F454L']
+Từ điển: 849 mục. Độ phủ tên (品名): 100.0%; quy cách (規格): 99.7%
+30 cụm chưa dịch nhiều nhất: 質×5, 直×4, 胞胎×4, 誼提×4, 戶透×3, 另一端×3, 脫×3, 鉚×2, 面碗公×2, 和×2, 自×2, 口×2, 舌×2, 霧狀×2, 帶×2, 溫×2, 驅動器×2, 霧面×2, 頻率×2, 频率×2, 書×2, 旋扭×2, 一端×2, 子×2, 珍珠棉×2, 騰業×2, 深×2, 可調×2, 纸托×2, 坑×2
+--- Cảnh báo theo model ---
+162025: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra
+162092L: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra
+162093L: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra
+END52: Loại mô tơ suy từ cụm mô tơ – cần kiểm tra
+F510L: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra
+F517L: Tụ điện nằm trong mô-đun đảo chiều
+F518L: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra; Tụ điện nằm trong mô-đun đảo chiều
+F519L: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra; Tụ điện nằm trong mô-đun đảo chiều
+F565: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra
+F566: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra
+F593L: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra; Tụ điện nằm trong mô-đun đảo chiều
+F594L: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra; Tụ điện nằm trong mô-đun đảo chiều
+M2020: Loại mô tơ suy từ cụm mô tơ – cần kiểm tra
+MER52: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra
+TMPH44: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra; Tụ điện nằm trong bộ thu
+TMPH52: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra; Tụ điện nằm trong bộ thu

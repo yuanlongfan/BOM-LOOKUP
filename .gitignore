@@ -1,0 +1,11 @@
+# file tam / ban thiet ke - khong dua len
+MOCKUP_*.html
+THIET_KE_*.md
+bom_data.js
+Claude outputs/
+xem_tren_dien_thoai.png
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+Thumbs.db
