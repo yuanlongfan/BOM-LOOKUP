@@ -3,7 +3,7 @@ Thiếu powerCord: 0  []
 Thiếu motorLabel: 0  []
 Thiếu motorType: 0  []
 Thiếu capacitors: 0  []
-Có bộ thu: 14, có bộ phát: 14
+Có bộ thu: 14, có bộ phát: 14, có điều khiển tường: 12
 Không có miếng đệm mô tơ: ['162095L', 'BEL52', 'F510L', 'F517L', 'F518L', 'F519L', 'F521L', 'F594L', 'FUL52', 'OS60']
 Không có tem dây đèn: ['F518L', 'F519L', 'F753', 'INS54', 'INS62', 'TMPH44', 'TMPH52', 'VE58']
 Tem dây đèn suy từ dây nguồn: []

@@ -622,6 +622,7 @@ def main():
             "capacitors": extract_caps(rows),
             "receivers": extract_rf(rows, "接收器"),
             "transmitters": extract_rf(rows, "發射器"),
+            "wallControls": extract_rf(rows, "牆控"),
             "motorPads": extract_pads(rows),
             "lightLabels": extract_light_labels(rows),
             "warnings": warnings,
@@ -702,7 +703,7 @@ def main():
     }
     for k, v in miss.items():
         lines.append(f"Thiếu {k}: {len(v)}  {[i['customerModel'] for i in v]}")
-    lines.append(f"Có bộ thu: {sum(1 for i in items if i['receivers'])}, có bộ phát: {sum(1 for i in items if i['transmitters'])}")
+    lines.append(f"Có bộ thu: {sum(1 for i in items if i['receivers'])}, có bộ phát: {sum(1 for i in items if i['transmitters'])}, có điều khiển tường: {sum(1 for i in items if i['wallControls'])}")
     lines.append(f"Không có miếng đệm mô tơ: {[i['customerModel'] for i in items if not i['motorPads']]}")
     lines.append(f"Không có tem dây đèn: {[i['customerModel'] for i in items if not i['lightLabels']]}")
     lines.append(f"Tem dây đèn suy từ dây nguồn: {[i['customerModel'] for i in items if any(l['source']=='cord' for l in i['lightLabels'])]}")
