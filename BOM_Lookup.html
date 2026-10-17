@@ -653,12 +653,14 @@ document.addEventListener('keydown',function(e){
 document.addEventListener('keydown',function(e){ if(e.key==='Escape'&&bt&&bt.tab==='bom'){ var d=$('#btd'); if(d&&d.classList.contains('open')){ e.preventDefault(); btCloseDr() } } });
 /* ---------- routing ---------- */
 function go(hash){ if(location.hash.replace(/^#/,'')===hash){route()} else {location.hash=hash} }
-function open(id){ clearTimeout(timer); q.value=BYID[id].customerModel; clr.hidden=false; closeSug(); go('m='+encodeURIComponent(id)+((bt&&bt.tab==='bom')?'&t=bom'+(bt.q?'&q='+encodeURIComponent(bt.q):''):'')) }
+function open(id){ clearTimeout(timer); q.value=BYID[id].customerModel; clr.hidden=false; closeSug(); go('m='+encodeURIComponent(id)) }
+var firstRoute=true;
 window.addEventListener('hashchange',route);
-function route(){
+function route(){ try{ route0() } finally{ firstRoute=false } }
+function route0(){
   var m=/^#m=([^&]+)(?:&(.*))?$/.exec(location.hash);
   if(m){
-    var id=decodeURIComponent(m[1]), params=new URLSearchParams(m[2]||'');
+    var id=decodeURIComponent(m[1]), params=new URLSearchParams(firstRoute?'':(m[2]||''));
     if(BYID[id]){
       if(document.activeElement!==q || !q.value) q.value=BYID[id].customerModel; clr.hidden=!q.value;
       if(bt && bt.it.id===id && $('#tabOv')){ btApply(params); return }
