@@ -11,7 +11,7 @@ Dây nguồn số dây lạ (khác 2/3): []
 Tụ không tách được µF/V: []
 Ảnh nhúng: 61/62 model (1.0 MB); ảnh không khớp model nào: ['162057L.jpg', 'F535L.jpg', 'F581L.jpg', 'TOP52.webp']
 Chưa có ảnh (1): ['F454L']
-Từ điển: 849 mục. Độ phủ tên (品名): 100.0%; quy cách (規格): 99.7%
+Từ điển: 850 mục. Độ phủ tên (品名): 100.0%; quy cách (規格): 99.7%
 30 cụm chưa dịch nhiều nhất: 質×5, 直×4, 胞胎×4, 誼提×4, 戶透×3, 另一端×3, 脫×3, 鉚×2, 面碗公×2, 和×2, 自×2, 口×2, 舌×2, 霧狀×2, 帶×2, 溫×2, 驅動器×2, 霧面×2, 頻率×2, 频率×2, 書×2, 旋扭×2, 一端×2, 子×2, 珍珠棉×2, 騰業×2, 深×2, 可調×2, 纸托×2, 坑×2
 --- Cảnh báo theo model ---
 162025: Dây nguồn suy ra từ dây rời (đã loại dây nối giắc bộ đèn) – cần kiểm tra
