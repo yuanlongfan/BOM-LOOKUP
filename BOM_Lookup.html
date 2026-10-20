@@ -494,6 +494,13 @@ dialog.lb button{position:absolute;right:10px;top:10px;background:var(--navy);co
 :root[data-theme="dark"] .bt-l1 .bt-lv{background:var(--coral);border-color:var(--coral)}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .bt-l1 .bt-lv{background:var(--coral);border-color:var(--coral)}}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .bt-l2 .bt-lv{color:#9DB2F5}:root:not([data-theme="light"]) .bt-l3 .bt-lv{color:#F0C668}:root:not([data-theme="light"]) .bt-kind[data-k]{filter:brightness(1.6)}}
+/* bảng Linh kiện BOM (máy tính): các cột cùng cỡ chữ; số lượng, đơn vị không in đậm */
+@media (min-width:761px){
+  .bt-row .bt-nm .bt-vi,.bt-row.bt-l1 .bt-nm .bt-vi,.bt-spec .bt-vi{font-size:16px;font-weight:400}
+  .bt-qty,.bt-unit{font-size:16px;font-weight:400;color:var(--ink);padding-top:0}
+  .bt-spec .bt-vi{color:var(--ink)}
+  .bt-nm .bt-zh,.bt-spec .bt-zh{font-size:13.5px}
+}
 /* điện thoại: thông số lên trước ảnh, ảnh thấp hơn */
 @media (max-width:600px){
   .hero .sh-head{order:-1}
