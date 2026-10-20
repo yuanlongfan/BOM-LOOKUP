@@ -71,6 +71,27 @@ def is_real_vi(t):
     return bool(RE_VI_ONLY.search(t))
 
 
+# ----------------------------------------------------------------- đơn vị (BOM mới không còn cột 生產單位)
+def load_units(path):
+    d = {}
+    if path.exists():
+        with open(path, encoding="utf-8-sig", newline="") as f:
+            for r in csv.DictReader(f):
+                if r.get("ma_lieu") and r.get("don_vi"):
+                    d[r["ma_lieu"].strip()] = r["don_vi"].strip()
+    return d
+
+
+UNITS = load_units(Path(__file__).resolve().parent / "don_vi_theo_ma.csv")
+
+
+def guess_unit(code, name):
+    """Đơn vị suy từ bảng mã liệu (tools/don_vi_theo_ma.csv); mã lạ: dòng '零件-' -> PCS, còn lại để trống."""
+    if code in UNITS:
+        return UNITS[code]
+    return "PCS" if name.startswith("零件-") else ""
+
+
 # ----------------------------------------------------------------- đọc file
 def read_rows(path):
     wb = openpyxl.load_workbook(path, data_only=True, read_only=True)
@@ -110,7 +131,7 @@ def read_rows(path):
                 vi_name = t
                 break
         out.append({"code": cell(lv) or cell(ci_code), "name": name, "qty": qty, "spec": spec, "spec_vi": spec_vi,
-                    "lv": lv, "unit": cell(ci_unit), "src": cell(ci_src), "sup": cell(ci_sup), "vi_name": vi_name})
+                    "lv": lv, "unit": cell(ci_unit) or guess_unit(cell(lv) or cell(ci_code), name), "src": cell(ci_src), "sup": cell(ci_sup), "vi_name": vi_name})
     return out
 
 
