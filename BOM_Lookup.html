@@ -992,7 +992,7 @@ function showResult(it,params){
       f.push('<div class="fld"><small>Màu</small><b style="display:inline-flex;align-items:center;gap:8px">'+(pd.color?'<i style="width:20px;height:20px;border-radius:50%;display:inline-block;border:1px solid rgba(128,128,128,.55);background:'+pd.color.hex+'"></i>'+esc(pd.color.vi):'—')+'</b></div>');
       f.push(fld('Số lượng',(pd.qty!=null?pd.qty:'?')+' miếng',true));
       if(pd.thickness) f.push(fld('Độ dày',pd.thickness));
-      var extra=[pd.adhesive?'tự dính':'không tự dính', pd.code?('mã '+pd.code):''].filter(Boolean).join(' · ');
+      var extra=['tự dính', pd.code?('mã '+pd.code):''].filter(Boolean).join(' · ');
       return '<div><div class="cardrow"><div class="viz" style="margin:0;padding:6px 10px">'+padSVG(pd)+'</div><div class="fields">'+f.join('')+'</div></div>'+
         '<div class="sub">'+esc(pd.shape)+' · '+esc(extra)+'</div><div class="raw">'+esc(pd.name)+' — '+esc(pd.rawVi||pd.raw)+'</div></div>';
     }).join('')+'</div>';
