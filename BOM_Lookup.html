@@ -283,7 +283,7 @@ dialog.lb button{position:absolute;right:10px;top:10px;background:var(--navy);co
 .bt-act{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:15px;color:var(--ink-3)}
 .bt-act button{border:1px solid var(--rule);background:var(--paper);border-radius:10px;padding:2px 10px;font-size:14px;color:var(--ink-2)}
 .bt-tbl{margin-top:14px;background:var(--paper);border-radius:16px;box-shadow:var(--shadow);overflow:hidden}
-.bt-thead,.bt-row{display:grid;grid-template-columns:minmax(330px,1.5fr) minmax(220px,1.2fr) 92px 112px;gap:0 18px;align-items:start;padding:10px 18px}
+.bt-thead,.bt-row{display:grid;grid-template-columns:minmax(330px,1.6fr) minmax(220px,1.3fr) 96px;gap:0 22px;align-items:start;padding:10px 18px}
 .bt-thead{font-size:13px;color:var(--ink-3);border-bottom:1px solid var(--rule);background:var(--rule-2)}
 .bt-row{border-bottom:1px solid var(--rule-2);cursor:pointer;position:relative;outline-offset:-2px}
 .bt-lvbar{display:inline-flex;flex-wrap:wrap;gap:6px;align-items:center;margin-right:10px;padding-right:12px;border-right:1px solid var(--rule);max-width:100%}
@@ -359,7 +359,6 @@ dialog.lb button{position:absolute;right:10px;top:10px;background:var(--navy);co
   .bt-thead{display:none}
   .bt-row{grid-template-columns:1fr auto;gap:4px 10px;padding:10px 12px}
   .bt-row .bt-spec{grid-column:1/-1;padding-left:30px}
-  .bt-row .bt-srcc{display:none}
   .bt-act{margin-left:0;width:100%;justify-content:space-between}
   .bt-chip{font-size:14px;padding:2px 10px}
 }
@@ -378,7 +377,7 @@ dialog.lb button{position:absolute;right:10px;top:10px;background:var(--navy);co
 :root[data-theme="dark"] .bt-seg button[aria-pressed="true"]{background:var(--coral);color:#fff}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .bt-seg button[aria-pressed="true"]{background:var(--coral);color:#fff}}
 /* ===== máy tính bảng ===== */
-@media (min-width:761px) and (max-width:1000px){.bt-row,.bt-thead{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 72px 104px!important;gap:0 12px}}
+@media (min-width:761px) and (max-width:1000px){.bt-row,.bt-thead{grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 72px!important;gap:0 12px}}
 /* ===== điện thoại ===== */
 @media (max-width:600px){
   .bar .wrap{gap:10px;padding-top:10px;padding-bottom:10px}
@@ -1189,7 +1188,7 @@ function btHTML(it,n){
     '<input id="btq" type="text" autocomplete="off" spellcheck="false" placeholder="Tìm linh kiện: vít, tem, dây điện, 螺絲, mã liệu…" aria-label="Tìm linh kiện trong BOM"><button class="bt-x" id="btx" type="button" aria-label="Xoá" hidden>×</button><kbd>/</kbd></label>'+
     '<div class="bt-seg" role="group" aria-label="Kiểu hiển thị"><button type="button" id="btvt" aria-pressed="true">Cây BOM</button><button type="button" id="btvl" aria-pressed="false">Danh sách</button></div>'+
   '</div><div class="bt-interp" id="bti" aria-live="polite"></div><div class="bt-chips" id="btc"></div></div>'+
-  '<div class="bt-tbl" role="table" aria-label="Danh sách linh kiện"><div class="bt-thead" role="row"><div>Linh kiện</div><div>Quy cách</div><div style="text-align:right">Số lượng</div><div>Nguồn</div></div><div id="btr"></div></div>'+
+  '<div class="bt-tbl" role="table" aria-label="Danh sách linh kiện"><div class="bt-thead" role="row"><div>Linh kiện</div><div>Quy cách</div><div style="text-align:right">Số lượng</div></div><div id="btr"></div></div>'+
   '<div class="bt-scrim" id="bts"></div>'+
   '<aside class="bt-dr" id="btd" aria-label="Chi tiết linh kiện" aria-hidden="true"><header><div><div class="bt-code" id="btdc"></div><h3 id="btdt"></h3><div class="bt-zh" id="btdz"></div></div><button class="bt-dx" id="btdx" type="button" aria-label="Đóng">✕</button></header><div class="bt-body" id="btdb"></div></aside>'+
   '</div>';
@@ -1251,8 +1250,7 @@ function btRender(){
     return '<div class="bt-row'+(o.dep===0?' bt-l1':o.dep===1?' bt-l2':o.dep===2?' bt-l3':'')+(x.ctx?' ctx':'')+(bt.sel===o.i?' sel':'')+'" role="row" data-i="'+o.i+'" style="--d:'+(bt.view==='tree'&&!LV?o.dep:0)+'" tabindex="0">'+
       '<div class="bt-nm"><span class="bt-ind">'+ind+'</span>'+car+'<span class="bt-lv" title="Cấp trong BOM">'+(o.dep+1)+'</span><div class="bt-txt"><div class="bt-vi">'+(o.kind?'<span class="bt-kind" data-k="'+o.kind+'">'+o.kind+'</span>':'')+btCap(btViLine(o.sn,x.ctx?[]:toks))+(o.kids&&!filtering&&bt.collapsed[o.i]?'<span class="bt-nk">'+o.nk+' mục</span>':'')+'</div><div class="bt-zh">'+btZhLine(o.sn,x.ctx?[]:toks)+'</div><div class="bt-code">'+esc(o.code)+'</div>'+path+'</div></div>'+
       '<div class="bt-spec">'+(o.spec?(hasZh?'<div class="bt-vi">'+btViLine(o.ss,x.ctx?[]:toks)+'</div><div class="bt-zh">'+btZhLine(o.ss,x.ctx?[]:toks)+'</div>':'<div class="bt-vi">'+btZhLine(o.ss,x.ctx?[]:toks)+'</div>'):'<span class="bt-note">—</span>')+'</div>'+
-      '<div class="bt-qty">'+esc(q2)+'<small>'+esc(o.unit)+'</small></div>'+
-      '<div class="bt-srcc">'+(o.src?'<span class="bt-src '+(o.src==='M'?'make':'buy')+'">'+(o.src==='M'?'Tự sản xuất':'Mua ngoài')+'</span>':'')+'</div></div>';
+      '<div class="bt-qty">'+esc(q2)+'<small>'+esc(o.unit)+'</small></div></div>';
   }).join('');
 }
 function btReveal(i){ var p=bt.D[i]?bt.D[i].par:null; while(p!=null){ bt.collapsed[p]=false; p=bt.D[p].par } }
@@ -1266,13 +1264,11 @@ function btOpenDr(i,noScroll){
   var a=[],p=o.par; while(p!=null){ a.unshift('<a href="#" data-i="'+p+'">'+btViLine(D[p].sn,[])+'</a>'); p=D[p].par }
   var words=[].concat(o.sn,o.ss).filter(function(s){return s.zh}), seen={};
   words=words.filter(function(s){ if(seen[s.t]) return false; return seen[s.t]=1 });
-  var srcTxt=o.src==='M'?'Tự sản xuất (自製)':o.src==='B'?'Mua ngoài (採購)':'—';
   $('#btdb').innerHTML=
     (a.length?'<div class="bt-crumb">'+a.join('<span>›</span>')+'</div>':'')+
     '<dl class="bt-kv"><dt>Quy cách</dt><dd><span class="bt-zh" style="font-size:16px;color:var(--ink)">'+esc(o.spec||'—')+'</span>'+(o.spec?'<button type="button" class="bt-cpy" data-copy="'+esc(o.spec)+'">Chép</button>':'')+
       (o.ss.some(function(s){return s.zh})?'<div class="bt-note" style="font-style:normal">'+btViLine(o.ss,[])+'</div>':'')+(o.viRaw?'<div class="bt-note">BOM ghi: '+esc(o.viRaw)+'</div>':'')+'</dd>'+
     '<dt>Số lượng</dt><dd><b>'+esc(o.qty===''?'—':o.qty)+'</b> '+esc(o.unit)+'</dd>'+
-    '<dt>Nguồn</dt><dd>'+srcTxt+'</dd>'+
     '<dt>Nhà cung cấp</dt><dd>'+esc(o.sup||'—')+'</dd>'+
     '<dt>Cấp BOM</dt><dd>'+(o.dep+1)+'</dd>'+
     '</dl>'+
