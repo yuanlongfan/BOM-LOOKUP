@@ -93,7 +93,7 @@ def guess_unit(code, name):
 
 
 # ----------------------------------------------------------------- pinyin
-PY_FIX = {"桿": "gǎn", "長": "cháng"}  # chữ đọc sai trong ngữ cảnh BOM (杆 mặc định gān; 長 trong BOM = dài: 牙長, 長孔, 加長 -> cháng)
+PY_FIX = {"桿": "gǎn", "長": "cháng", "彈": "tán"}  # chữ đọc sai trong ngữ cảnh BOM (杆 mặc định gān; 長 trong BOM = dài: 牙長, 長孔, 加長 -> cháng)
 
 
 def make_pinyin():
