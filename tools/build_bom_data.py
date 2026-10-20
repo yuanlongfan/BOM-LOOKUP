@@ -92,6 +92,29 @@ def guess_unit(code, name):
     return "PCS" if name.startswith("零件-") else ""
 
 
+# ----------------------------------------------------------------- pinyin
+PY_FIX = {"桿": "gǎn", "長": "cháng"}  # chữ đọc sai trong ngữ cảnh BOM (杆 mặc định gān; 長 trong BOM = dài: 牙長, 長孔, 加長 -> cháng)
+
+
+def make_pinyin():
+    """Trả về hàm run chữ Hán phồn thể -> pinyin có dấu thanh. Đổi sang giản thể trước để chọn đúng âm theo từ (乾燥 gān, 調光 tiáo...)."""
+    from pypinyin import pinyin, Style
+    try:
+        from opencc import OpenCC
+        t2s = OpenCC("t2s").convert
+    except ImportError:
+        t2s = lambda x: x  # noqa: E731
+        print("  (chưa cài opencc: pinyin có thể sai âm ở chữ nhiều âm. Chạy: python -m pip install opencc-python-reimplemented)")
+
+    def conv(run):
+        simp = t2s(run)
+        if len(simp) != len(run):
+            simp = run
+        out = [x[0] for x in pinyin(simp, style=Style.TONE, errors="default")]
+        return " ".join(PY_FIX.get(ch, py) for ch, py in zip(run, out))
+    return conv
+
+
 # ----------------------------------------------------------------- đọc file
 def read_rows(path):
     wb = openpyxl.load_workbook(path, data_only=True, read_only=True)
@@ -714,13 +737,13 @@ def main():
     # pinyin (có dấu thanh) cho từng cụm chữ Hán trong tên linh kiện -> hiện dưới dòng tiếng Trung
     py = {}
     try:
-        from pypinyin import lazy_pinyin, Style
+        conv = make_pinyin()
         for rr in bom_rows.values():
             for r in rr:
                 for run in re.findall(r"[㐀-鿿]+", r[2]):
                     for k in {run, run[:-1] if run.endswith("組") else run}:
                         if k and k not in py:
-                            py[k] = " ".join(lazy_pinyin(k, style=Style.TONE))
+                            py[k] = conv(k)
     except ImportError:
         print("  (chưa cài pypinyin nên bỏ qua phiên âm. Chạy: python -m pip install pypinyin)")
     block = ("<!--DATA-START-->\n<script>window.BOM_DATA=" + js(data) + ";window.BOM_PICS=" + js(pics) + ";window.BOM_ROWS=" + js(bom_rows) + ";window.BOM_DICT=" + js(list(dic.values())) + ";window.BOM_PY=" + js(py) + ";</script>\n<!--DATA-END-->")
