@@ -319,9 +319,10 @@ dialog.lb button{position:absolute;right:10px;top:10px;background:var(--navy);co
 .bt-spec .bt-zh{color:var(--ink-2)}
 .bt-spec .bt-vi{font-weight:400;font-size:15px;color:var(--ink-2)}
 .bt-unk{text-decoration:underline dotted var(--gold);text-underline-offset:3px}
-.bt-unit{font-size:14px;font-weight:700;color:var(--ink-2);letter-spacing:.03em;padding-top:3px}
+.bt-hc{text-align:center}
+.bt-unit{text-align:center;font-size:14px;font-weight:700;color:var(--ink-2);letter-spacing:.03em;padding-top:3px}
 .bt-qty small{display:none}
-.bt-qty{text-align:right;font-weight:700;font-variant-numeric:tabular-nums}.bt-qty small{font-weight:400;color:var(--ink-3);font-size:13px}
+.bt-qty{text-align:center;font-weight:700;font-variant-numeric:tabular-nums}.bt-qty small{font-weight:400;color:var(--ink-3);font-size:13px}
 .bt-src{font-size:13px;border-radius:20px;padding:1px 10px;justify-self:start;border:1px solid;display:inline-block}
 .bt-src.make{color:var(--teal)}.bt-src.buy{color:var(--indigo)}
 .bt-path{font-size:13px;color:var(--ink-3);margin-top:2px}
@@ -1192,7 +1193,7 @@ function btHTML(it,n){
     '<input id="btq" type="text" autocomplete="off" spellcheck="false" placeholder="Tìm linh kiện: vít, tem, dây điện, 螺絲, mã liệu…" aria-label="Tìm linh kiện trong BOM"><button class="bt-x" id="btx" type="button" aria-label="Xoá" hidden>×</button><kbd>/</kbd></label>'+
     '<div class="bt-seg" role="group" aria-label="Kiểu hiển thị"><button type="button" id="btvt" aria-pressed="true">Cây BOM</button><button type="button" id="btvl" aria-pressed="false">Danh sách</button></div>'+
   '</div><div class="bt-interp" id="bti" aria-live="polite"></div><div class="bt-chips" id="btc"></div></div>'+
-  '<div class="bt-tbl" role="table" aria-label="Danh sách linh kiện"><div class="bt-thead" role="row"><div>Linh kiện</div><div>Quy cách</div><div style="text-align:right">Số lượng</div><div>Đơn vị</div></div><div id="btr"></div></div>'+
+  '<div class="bt-tbl" role="table" aria-label="Danh sách linh kiện"><div class="bt-thead" role="row"><div>Linh kiện</div><div>Quy cách</div><div class="bt-hc">Số lượng</div><div class="bt-hc">Đơn vị</div></div><div id="btr"></div></div>'+
   '<div class="bt-scrim" id="bts"></div>'+
   '<aside class="bt-dr" id="btd" aria-label="Chi tiết linh kiện" aria-hidden="true"><header><div><div class="bt-code" id="btdc"></div><h3 id="btdt"></h3><div class="bt-zh" id="btdz"></div></div><button class="bt-dx" id="btdx" type="button" aria-label="Đóng">✕</button></header><div class="bt-body" id="btdb"></div></aside>'+
   '</div>';
