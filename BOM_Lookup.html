@@ -679,7 +679,7 @@ if(!DATA || !DATA.items){
 }
 var ITEMS = DATA.items, BYID = {};
 ITEMS.forEach(function(it){BYID[it.id]=it});
-$('#stat').textContent = ITEMS.length + ' model · cập nhật ' + String(DATA.generatedAt||'').slice(0,10);
+$('#stat').textContent = ITEMS.length + ' model · cập nhật ' + String(DATA.generatedAt||'').slice(0,16).replace('T',' ');
 
 /* ---------- category colours ---------- */
 var CAT_COLORS={'Quạt trong nhà':'#4B63C8','Quạt ngoài trời':'#1E9488','Quạt nơi ẩm ướt':'#8A55C4','Quạt ốp trần trong nhà':'#E0583C','Quạt ốp trần ngoài trời':'#D29A2E'};
