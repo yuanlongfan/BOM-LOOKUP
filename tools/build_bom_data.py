@@ -92,6 +92,64 @@ def guess_unit(code, name):
     return "PCS" if name.startswith("零件-") else ""
 
 
+# ----------------------------------------------------------------- tóm tắt đóng gói (từ BOM)
+RE_DIM3 = re.compile(r"(\d+(?:\.\d+)?)\s*[xX×]\s*(\d+(?:\.\d+)?)\s*[xX×]\s*(\d+(?:\.\d+)?)\s*(?:MM|mm)")
+RE_DIM2 = re.compile(r"(\d+(?:\.\d+)?)\s*[xX×]\s*(\d+(?:\.\d+)?)\s*(?:MM|mm)")
+RE_GRAM = re.compile(r"(\d+(?:\.\d+)?)\s*[gG](?![A-Za-z])")
+
+
+def _dim(spec):
+    m = RE_DIM3.search(spec)
+    if m:
+        return " × ".join(m.groups()) + " mm"
+    m = RE_DIM2.search(spec)
+    return (" × ".join(m.groups()) + " mm") if m else ""
+
+
+def _layers(spec):
+    for zh, n in (("三層", 3), ("五層", 5), ("七層", 7), ("3層", 3), ("5層", 5)):
+        if zh in spec:
+            return f"{n} lớp"
+    return ""
+
+
+def pack_summary(rows):
+    """rows = BOM_ROWS của một model ([lv, code, name, qty, spec, unit, src, sup, vi]). Trả về tóm tắt đóng gói bằng tiếng Việt."""
+    def q(r):
+        v = r[3]
+        return v if isinstance(v, (int, float)) else (float(v) if str(v).replace(".", "", 1).isdigit() else 1)
+
+    out = {"carton": None, "tray": None, "boards": [], "bags": {"pe": 0, "bubble": 0, "sizes": []}, "other": []}
+    for r in rows:
+        name, spec = r[2], r[4] or ""
+        if name == "零件-紙箱" and not out["carton"]:
+            kind = "hộp trắng chữ đen" if "白盒黑字" in spec else ("hộp trắng" if "白盒" in spec else ("hộp màu" if "彩盒" in spec else "thùng carton"))
+            out["carton"] = {"size": _dim(spec), "kind": kind, "qty": q(r)}
+        elif name == "零件-紙托" and not out["tray"]:
+            g = RE_GRAM.search(spec)
+            out["tray"] = {"size": _dim(spec), "weight": (g.group(1) + " g") if g else "", "qty": q(r)}
+        elif name == "零件-紙板":
+            kind = _layers(spec) or ("bìa trắng" if "白紙板" in spec else "")
+            if "250g" in spec or "250g/" in spec:
+                kind = (kind + " · " if kind else "") + "250 g/m²"
+            if _dim(spec):
+                out["boards"].append({"size": _dim(spec), "kind": kind, "qty": q(r)})
+        elif name in ("零件-PE袋", "零件-氣泡袋"):
+            key = "pe" if name == "零件-PE袋" else "bubble"
+            out["bags"][key] += q(r)
+            d = _dim(spec.replace("CM", "MM").replace("cm", "mm"))
+            m = RE_DIM2.search(spec.replace("CM", "MM").replace("cm", "mm"))
+            if m:
+                out["bags"]["sizes"].append(f"{m.group(1)}×{m.group(2)} cm")
+        elif name == "零件-乾燥劑":
+            out["other"].append("Gói hút ẩm ×%g" % q(r))
+    out["bags"]["sizes"] = sorted(set(out["bags"]["sizes"]))
+    for k in ("pe", "bubble"):
+        v = out["bags"][k]
+        out["bags"][k] = int(v) if float(v).is_integer() else v
+    return out
+
+
 # ----------------------------------------------------------------- pinyin
 PY_FIX = {"桿": "gǎn", "長": "cháng", "彈": "tán"}  # chữ đọc sai trong ngữ cảnh BOM (杆 mặc định gān; 長 trong BOM = dài: 牙長, 長孔, 加長 -> cháng)
 
@@ -645,6 +703,8 @@ def main():
     ap.add_argument("--bom", default=str(HERE.parents[1] / "BOM"))
     ap.add_argument("--html", default=str(HERE.parent / "BOM_Lookup.html"))
     ap.add_argument("--pics", default=str(HERE.parent / "PICTURE"))
+    ap.add_argument("--packing", default=str(HERE.parent / "PACKING"), help="thư mục PACKING: mỗi model một file <model>.pdf (hướng dẫn đóng gói)")
+    ap.add_argument("--packing-out", default=str(HERE.parent / "PACKING_WEB"), help="thư mục ghi ảnh đóng gói WebP (được đẩy lên GitHub)")
     a = ap.parse_args()
     bom_dir, html_path, pics_dir = Path(a.bom), Path(a.html), Path(a.pics)
     files = sorted(p for p in bom_dir.glob("*.xlsx") if not p.name.startswith("~$"))
@@ -746,7 +806,19 @@ def main():
                             py[k] = conv(k)
     except ImportError:
         print("  (chưa cài pypinyin nên bỏ qua phiên âm. Chạy: python -m pip install pypinyin)")
-    block = ("<!--DATA-START-->\n<script>window.BOM_DATA=" + js(data) + ";window.BOM_PICS=" + js(pics) + ";window.BOM_ROWS=" + js(bom_rows) + ";window.BOM_DICT=" + js(list(dic.values())) + ";window.BOM_PY=" + js(py) + ";</script>\n<!--DATA-END-->")
+    # đóng gói: ảnh + bảng vật liệu từ PACKING\<model>.pdf, tóm tắt từ BOM
+    pack_report = []
+    try:
+        sys.path.insert(0, str(HERE))
+        from packing import build_packing
+        pack = build_packing(Path(a.packing), Path(a.packing_out), {i["id"] for i in items}, pack_report)
+    except ImportError as e:
+        pack = {}
+        pack_report.append(f"Đóng gói: bỏ qua ({e}). Cần: python -m pip install pymupdf pillow")
+    for it in items:
+        it["packSummary"] = pack_summary(bom_rows[it["id"]])
+    data["packing"] = len(pack)
+    block = ("<!--DATA-START-->\n<script>window.BOM_DATA=" + js(data) + ";window.BOM_PICS=" + js(pics) + ";window.BOM_ROWS=" + js(bom_rows) + ";window.BOM_DICT=" + js(list(dic.values())) + ";window.BOM_PY=" + js(py) + ";window.BOM_PACK=" + js(pack) + ";</script>\n<!--DATA-END-->")
     html = html_path.read_text(encoding="utf-8")
     new_html, n = re.subn(r"<!--DATA-START-->.*?<!--DATA-END-->", lambda m: block, html, flags=re.S)
     if n != 1:
@@ -787,6 +859,7 @@ def main():
         w.writerow(["zh", "so_lan", "vi_du", "model", "vi"])
         for k, v in sorted(unk.items(), key=lambda kv: -kv[1][0]):
             w.writerow([k, v[0], v[1], " ".join(sorted(v[2]))[:80], ""])
+    lines += pack_report
     lines.append("--- Cảnh báo theo model ---")
     for i in items:
         if i["warnings"]:

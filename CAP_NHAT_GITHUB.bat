@@ -17,7 +17,7 @@ if not exist ".git" (
 )
 git remote set-url origin %REPO%
 
-git add BOM_Lookup.html index.html README.md tools PICTURE
+git add BOM_Lookup.html index.html README.md tools PICTURE PACKING_WEB
 git commit -m "Cap nhat BOM %date% %time%"
 git push -u origin main
 if errorlevel 1 (

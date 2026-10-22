@@ -13,6 +13,7 @@ Phím tắt: `/` để nhảy vào ô tìm; trong tab BOM có thể lọc theo c
 
 ## Cập nhật dữ liệu (người giữ BOM)
 - Đặt các file BOM `.xlsx` vào thư mục BOM gốc, ảnh quạt vào `PICTURE/` (tên file = model khách hàng).
+- Đóng gói: đặt file hướng dẫn `<model>.pdf` (tiếng Việt, mỗi model một file) vào thư mục `PACKING/`. Khi dựng, ảnh được ghi ra `PACKING_WEB/` (đẩy lên GitHub cùng `BOM_Lookup.html`), thư mục `PACKING/` gốc không đẩy.
 - Chạy `tools\CAP_NHAT_DU_LIEU.bat` → file `BOM_Lookup.html` được dựng lại.
 - Sửa bản dịch: mở `tools\tu_dien.csv` (UTF-8), sửa cột `vi`, rồi chạy lại file `.bat` ở trên.
   Từ nào chưa dịch được nằm trong `tools\tu_chua_dich.csv`.

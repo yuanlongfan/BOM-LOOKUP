@@ -9,3 +9,5 @@ __pycache__/
 *.log
 .DS_Store
 Thumbs.db
+# thu muc goc PACKING (PDF huong dan dong goi, nang) - chi day anh WebP trong PACKING_WEB
+PACKING/
