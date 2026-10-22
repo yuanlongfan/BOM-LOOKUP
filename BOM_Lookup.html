@@ -545,7 +545,9 @@ dialog.lb button{position:absolute;right:10px;top:10px;z-index:2;background:var(
 .pk-t small{display:block;font-size:16px;font-weight:700;color:var(--ink);font-style:normal;margin-bottom:4px}
 .pk-t b{display:block;font-size:14.5px;font-weight:400;line-height:1.45;overflow-wrap:anywhere}
 .pk-t b i{font-style:normal;font-weight:400;color:var(--ink-2)}
-.pk-t span{display:block;font-size:13px;color:var(--ink-3);margin-top:4px}
+.pk-l+.pk-l{margin-top:4px}.pk-l i{font-style:normal;color:var(--ink-2);white-space:nowrap}
+.pk-t b .bt-unk{text-decoration:none}
+.pk-t>span{display:block;font-size:13px;color:var(--ink-3);margin-top:4px}
 .pk-none{margin-top:16px;padding:16px;border:1px dashed var(--rule);border-radius:14px;color:var(--ink-2);background:var(--paper);font-size:15px}
 .pk-none code{background:var(--bg);padding:0 6px;border-radius:4px}
 .pk-gal{display:grid;gap:10px}
@@ -579,7 +581,7 @@ dialog.lb button{position:absolute;right:10px;top:10px;z-index:2;background:var(
 .pk-src{margin-top:12px;font-size:13px;color:var(--ink-3)}
 @media (max-width:900px){.pk-sum{grid-template-columns:repeat(2,minmax(0,1fr))}.pk-top{grid-template-columns:1fr}}
 @media (max-width:600px){
-  .pk-t{padding:10px 12px}.pk-t small{font-size:14.5px}.pk-t b{font-size:13.5px}.pk-t span{font-size:12px}
+  .pk-t{padding:10px 12px}.pk-t small{font-size:14.5px}.pk-t b{font-size:13.5px}
   .pk-leg{grid-template-columns:1fr}
   .pk-hd{display:none}
   .pk-row{grid-template-columns:36px 1fr 52px;gap:2px 10px;padding:9px 12px;font-size:14px}
@@ -1170,13 +1172,18 @@ function packN(it){ var P=(window.BOM_PACK||{})[it.id]; return P&&P.imgs?P.imgs.
 function packHTML(it){
   var P=(window.BOM_PACK||{})[it.id]||null, S=it.packSummary||{}, h='';
   function tile(label,val,sub){ return '<div class="pk-t"><small>'+esc(label)+'</small><b>'+val+'</b>'+(sub?'<span>'+sub+'</span>':'')+'</div>' }
-  var tiles=[];
-  if(S.carton) tiles.push(tile('Thùng ngoài',esc(S.carton.size||'—'),esc(S.carton.kind||'')));
-  if(S.tray) tiles.push(tile('Khay giấy',esc(S.tray.size||'—'),esc(S.tray.weight||'')));
-  if(S.boards&&S.boards.length) tiles.push(tile('Tấm carton',S.boards.map(function(b){return esc(b.size)+' <i>× '+esc(b.qty)+'</i>'}).join('<br>'),S.boards.map(function(b){return esc(b.kind)}).filter(Boolean).join(' · ')));
-  var B=S.bags||{}, bagTxt=[];
-  if(B.pe) bagTxt.push('Túi PE × '+B.pe);
-  if(B.bubble) bagTxt.push('Túi bóng khí × '+B.bubble);
+  var tiles=[], D=btPrep(it.id);
+  /* lấy thẳng từ các dòng đóng gói trong BOM: tên + quy cách (đã dịch) + số lượng */
+  function bomLines(zh){
+    return D.filter(function(o){return o.zh===zh}).map(function(o){
+      var q=(o.qty===''||o.qty==null)?1:+o.qty, t=btViLine(o.ss,[]);
+      return '<div class="pk-l">'+t+(q>1?' <i>× '+q.toLocaleString('vi-VN',{maximumFractionDigits:4})+'</i>':'')+'</div>';
+    }).join('');
+  }
+  var bx=bomLines('零件-紙箱'), ty=bomLines('零件-紙托'), bd=bomLines('零件-紙板');
+  if(bx) tiles.push(tile('Thùng ngoài',bx));
+  if(ty) tiles.push(tile('Khay giấy',ty));
+  if(bd) tiles.push(tile('Bìa giấy',bd));
   h+='<div class="sec-h" style="margin-top:6px"><h2>Quy cách đóng gói</h2><span>tổng hợp từ BOM</span></div>';
   h+=tiles.length?'<div class="pk-sum">'+tiles.join('')+'</div>':'<div class="empty">BOM của model này không có vật tư đóng gói.</div>';
   if(!P){
