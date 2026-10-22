@@ -175,6 +175,25 @@ def _save_webp(im, dest, max_side=1400, quality=78):
     return dest.stat().st_size
 
 
+def _load_rot():
+    """tools/dong_goi_xoay.csv: anh (vd GAR56-1), goc (90 = quay trái, -90 = quay phải, 180)."""
+    import csv
+    d = {}
+    f = Path(__file__).resolve().parent / "dong_goi_xoay.csv"
+    if f.exists():
+        with open(f, encoding="utf-8-sig", newline="") as fh:
+            for r in csv.DictReader(fh):
+                try:
+                    if (r.get("anh") or "").strip():
+                        d[r["anh"].strip()] = int(r.get("goc") or 0)
+                except ValueError:
+                    pass
+    return d
+
+
+ROT = _load_rot()
+
+
 # ----------------------------------------------------------------- chính
 def build_packing(pack_dir, out_dir, models, report):
     """Trả về {model: {"imgs": [...], "materials": [...], "legend": [...], "notes": [...], "company": str, "src": str}}."""
@@ -208,6 +227,9 @@ def build_packing(pack_dir, out_dir, models, report):
             continue
         outs = []
         for i, im in enumerate(images, 1):
+            ang = ROT.get(f"{m}-{i}")
+            if ang:
+                im = im.rotate(ang, expand=True)
             dest = out_dir / f"{m}-{i}.webp"
             total += _save_webp(im, dest)
             outs.append(f"PACKING_WEB/{m}-{i}.webp")
