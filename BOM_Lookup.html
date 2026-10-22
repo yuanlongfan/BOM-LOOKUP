@@ -1177,7 +1177,6 @@ function packHTML(it){
   var B=S.bags||{}, bagTxt=[];
   if(B.pe) bagTxt.push('Túi PE × '+B.pe);
   if(B.bubble) bagTxt.push('Túi bóng khí × '+B.bubble);
-  if(bagTxt.length) tiles.push(tile('Túi',bagTxt.join('<br>'),(S.other||[]).map(esc).join(' · ')));
   h+='<div class="sec-h" style="margin-top:6px"><h2>Quy cách đóng gói</h2><span>tổng hợp từ BOM</span></div>';
   h+=tiles.length?'<div class="pk-sum">'+tiles.join('')+'</div>':'<div class="empty">BOM của model này không có vật tư đóng gói.</div>';
   if(!P){
