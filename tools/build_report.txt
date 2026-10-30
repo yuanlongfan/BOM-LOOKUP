@@ -1,20 +1,20 @@
-Số file BOM đọc được: 62/62  (overrides áp dụng: 0)
+Số file BOM đọc được: 63/63  (overrides áp dụng: 0)
 Thiếu powerCord: 0  []
 Thiếu motorLabel: 0  []
 Thiếu motorType: 0  []
 Thiếu capacitors: 0  []
-Có bộ thu: 14, có bộ phát: 14, có điều khiển tường: 12
+Có bộ thu: 14, có bộ phát: 14, có điều khiển tường: 13
 Không có miếng đệm mô tơ: ['162095L', 'F510L', 'F517L', 'F518L', 'F519L', 'F521L', 'F594L', 'FUL52', 'OS60']
 Không có tem dây đèn: ['F518L', 'F519L', 'F753', 'INS54', 'INS62', 'TMPH44', 'TMPH52', 'VE58']
 Tem dây đèn suy từ dây nguồn: []
 Dây nguồn số dây lạ (khác 2/3): []
 Tụ không tách được µF/V: []
-Ảnh nhúng: 61/62 model (0.4 MB); ảnh không khớp model nào: ['162057L.jpg', 'F535L.jpg', 'F581L.jpg', 'TOP52.webp']
-Chưa có ảnh (1): ['F454L']
-Từ điển: 865 mục. Độ phủ tên (品名): 100.0%; quy cách (規格): 99.7%
-30 cụm chưa dịch nhiều nhất: 質×5, 直×4, 胞胎×4, 誼提×4, 另一端×3, 鉚×2, 面碗公×2, 和×2, 自×2, 霧狀×2, 帶×2, 溫×2, 驅動器×2, 霧面×2, 書×2, 一端×2, 子×2, 脫×2, 珍珠棉×2, 騰業×2, 深×2, 可調×2, 纸托×2, 坑×2, 開×2, 鍵×2, 安×2, 埋×1, 柱×1, 電著×1
-Đóng gói: 44/62 model có hướng dẫn; ảnh WebP 7.2 MB (55 ảnh)
-Đóng gói - model chưa có file PDF: ['F448L', 'F454L', 'F517L', 'F521L', 'F546', 'F547', 'F565', 'F566', 'OP119', 'OP52', 'P101', 'P104', 'P114', 'P119', 'P211', 'P52', 'PPH52', 'S104']
+Ảnh nhúng: 61/63 model (0.4 MB); ảnh không khớp model nào: ['162057L.jpg', 'F535L.jpg', 'F581L.jpg', 'TOP52.webp']
+Chưa có ảnh (2): ['BRD52', 'F454L']
+Từ điển: 869 mục. Độ phủ tên (品名): 100.0%; quy cách (規格): 99.7%
+30 cụm chưa dịch nhiều nhất: 質×5, 直×4, 胞胎×4, 誼提×4, 另一端×3, 鉚×2, 面碗公×2, 和×2, 自×2, 霧狀×2, 帶×2, 溫×2, 驅動器×2, 霧面×2, 書×2, 一端×2, 子×2, 脫×2, 珍珠棉×2, 騰業×2, 深×2, 可調×2, 纸托×2, 坑×2, 開×2, 鍵×2, 安×2, 埋×1, 柱×1, 身×1
+Đóng gói: 44/63 model có hướng dẫn; ảnh WebP 7.2 MB (55 ảnh)
+Đóng gói - model chưa có file PDF: ['BRD52', 'F448L', 'F454L', 'F517L', 'F521L', 'F546', 'F547', 'F565', 'F566', 'OP119', 'OP52', 'P101', 'P104', 'P114', 'P119', 'P211', 'P52', 'PPH52', 'S104']
 Đóng gói - file không khớp model nào (bỏ qua): ['162057L']
 Đóng gói - có bảng vật liệu: 23 model; có chú thích số: 19 model; có lưu ý: 15 model
 Đóng gói - không có ảnh: []
