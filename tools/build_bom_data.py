@@ -448,7 +448,14 @@ def extract_pads(rows):
             "shape": shape, "material": mat, "color": col, "thickness": thick,
             "code": mc.group(1) if mc else None, "adhesive": bool(re.search(r"自粘|自黏", n)), "qty": q,
         })
-    return out
+    # BOM có thể liệt kê cùng một miếng đệm trong 2 cụm cánh/giá cánh (bản thường và bản -VA): chỉ hiện một lần
+    uniq, seen = [], set()
+    for x in out:
+        k = (x["name"], x["raw"], x["qty"])
+        if k not in seen:
+            seen.add(k)
+            uniq.append(x)
+    return uniq
 
 
 # ----------------------------------------------------------------- tem dây đèn
